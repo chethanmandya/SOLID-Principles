@@ -21,7 +21,7 @@ If you need to mock too many objects, it usually means breaking the SRP.
 
 
 
-# Open / Closed principal :
+## Open / Closed principal :
 
 ### Definition :
 Modules should be open for extension, but closed for modification.
