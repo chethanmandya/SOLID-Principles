@@ -3,14 +3,13 @@
 ## Single responsive principal :
 
 ### Definition :
-    Class should have one and only one reasons to change . Should have single responsibility to change.
-    Single responsibility is the concept of a Class doing one specific thing (responsibility) and not trying to do more than it should, 
-    which is also referred to as High Cohesion.
+Class should have one and only one reasons to change . Should have single responsibility to change.
+Single responsibility is the concept of a Class doing one specific thing (responsibility) and not trying to do more than it should, which is also referred to as High Cohesion.
 
 Making sure that a class has a single responsibility makes it per default also easier to see what it does and how you can extend/improve it.
 
 How to Recognize a Break of the SRP?
-- I can give you several rules of thumb.
+I can give you several rules of thumb.
 - Class Has Too Many Dependencies.
 - A constructor with too many input parameters implies many dependencies (hopefully you do inject dependencies). Another way too see many dependencies is by the test class.
 If you need to mock too many objects, it usually means breaking the SRP.
