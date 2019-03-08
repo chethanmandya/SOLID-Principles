@@ -147,4 +147,21 @@ To understand why it’s not adhering to the Liskov Principle, Let’s assume th
 
 Hence, Please follow the below code which addresses this issue. Also, we recommend to watch our video tutorials for complete guidance and understanding of the code.
 
+## Interface Segregation Principle
 
+### Definition :
+1. The interface-segregation principle (ISP) states that "no client should be forced to depend on methods it does not use".
+2. Which means, Instead of one fat interface many small interfaces are preferred based on groups of methods with each one serving one submodule.
+3. The ISP was first used and formulated by Robert C. Martin while consulting for Xerox. 
+
+
+###  Dependency Inversion Principle
+
+### Definition :
+High-level modules should not depend on low-level modules. Both should depend on abstractions.
+AND
+Abstractions should not depend on details. Details should depend on abstractions.
+
+To simplify this we can state that while designing the interaction between a high-level module and a low-level one, the interaction should be thought of as an abstract interaction between them.  
+
+Usage Intention : Before understanding the intention of usage, let’s try to understand a traditional application architecture implementation. 
