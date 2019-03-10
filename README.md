@@ -93,7 +93,7 @@ In that case, we end up with the following disadvantages
  
 Hope the above counter facts helps in understanding on why we need to follow the open closed principle.
 
-Let’s take example requirment, let’s say you have class called parser, it has to parse different types of server response, the response could be parsing XML, json or it could be CSV.
+Please refer coding part to undestand implementation part. 
 
 
 ## Liskov Substitution Principle
@@ -117,15 +117,13 @@ In the process of development we should ensure that
 
 3. And last but not the least, New derived classes just extend without replacing the functionality of old classes
 
-In the previous session as part of the Open closed Principle implementation we have created different employee classes to calculate bonus of the employee. From the employee perspective we have implemented the Open closed principle. 
-
-Now if you take a look at the main program, we have created Employee objects which consists of both permanent and contract employee. 
+To illustrate LSP, we have created different employee classes to calculate bonus of the employee. From the employee perspective we have implemented the Open closed principle. In the main program, we have created Employee objects which consists of both permanent and contract employee. 
 
 If you take a closer look at this program the Derived types which are Permanent and TemporaryEmployee have completely substituted the base type employee class.
 
 So, based on the Liskov substitution principle we have achieved LSP by ensuring that Derived types are completely substitutable for their base types.
 
-Also, notice the main program, without using the subtypes we are calculating the bonus of the employee from the base class type itself. Hence, we are satisfying the Liskov substitution principle. 
+Also, notice in the main program, without using the subtypes we are calculating the bonus of the employee from the base class type itself. Hence, we are satisfying the Liskov substitution principle. 
 
 That means along with the Open Closed Principle we have partially implemented the LSP. 
 
@@ -133,7 +131,7 @@ Also, I can state that this implementation is not adhering to guide lines of Lis
 
 To understand why it’s not adhering to the Liskov Principle, Let’s assume that we need to have a Contract Employee as one of the employee category. A point to note here is a contract employee is not eligible for any bonus calculation and post implementing the Employee class we end up throwing exception at the runtime in the caclculatebonus() method. This violates the Liskov Substitution Principle. 
 
-Hence, Please follow the below code which addresses this issue. Also, we recommend to watch our video tutorials for complete guidance and understanding of the code.
+Hence, Please follow the uploaded repo code which addresses this issue.
 
 ## Interface Segregation Principle
 
@@ -204,5 +202,5 @@ Now, what should be in interface (or in abstract class)? As you can see, Custome
          string GetCustomerName(int id);
       }
 
-Now, further illustration of ICustomerDataAccess in CustomerDataAccess class can be refer in uploaded example.
+Now, further illustration of ICustomerDataAccess in CustomerDataAccess class can be refer from uploaded example.
 
