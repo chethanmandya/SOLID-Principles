@@ -11,15 +11,14 @@ SOLID Introduction
 4. The SOLID acronym was first introduced by Michael Feathers
 
 SOLID Acronym 
+- S : Single Responsibility Principle (SRP) 
+- O : Open closed Principle (OSP) 
+- L :  Liskov substitution Principle (LSP) 
+- I  :  Interface Segregation Principle (ISP) 
+- D : Dependency Inversion Principle (DIP)
 
-S : Single Responsibility Principle (SRP) 
-O : Open closed Principle (OSP) 
-L :  Liskov substitution Principle (LSP) 
-I  :  Interface Segregation Principle (ISP) 
-D : Dependency Inversion Principle (DIP)
-
-If we don’t follow SOLID Principles we  
-1. End up with tight or strong coupling of the code with many other modules/applications
+If we don’t follow SOLID Principles   
+1. We end up with tight or strong coupling of the code with many other modules/applications
 2. Tight coupling causes time to implement any new requirement, features or any bug fixes and some times it creates unknown issues
 3. End up with a code which is not testable
 4. End up with duplication of code
