@@ -164,4 +164,57 @@ Abstractions should not depend on details. Details should depend on abstractions
 
 To simplify this we can state that while designing the interaction between a high-level module and a low-level one, the interaction should be thought of as an abstract interaction between them.  
 
-Usage Intention : Before understanding the intention of usage, let’s try to understand a traditional application architecture implementation. 
+
+To understand DIP, let's take an example as below.
+
+public class CustomerBusinessLogic
+{
+    public CustomerBusinessLogic()
+    {
+    }
+
+    public string GetCustomerName(int id)
+    {
+        DataAccess dataAccess = DataAccessFactory.GetDataAccessObj();
+        return dataAccess.GetCustomerName(id);
+    }
+}
+
+public class DataAccessFactory
+{
+    public static DataAccess GetDataAccessObj() 
+    {
+        return new DataAccess();
+    }
+}
+
+public class DataAccess
+{
+    public DataAccess()
+    {
+    }
+
+    public string GetCustomerName(int id) {
+        return "Dummy Customer Name"; // get it from DB in real app
+    }
+}
+
+
+In the above example, CustomerBusinessLogic class uses concrete DataAccess class and it is tightly coupled DataAccess class, nothing but it has direct dependency on DataAccess class. 
+
+As per DIP definition, a high-level module should not depend on low-level modules. Both should depend on abstraction. So, first, decide which is the high-level module (class) and low-level module. High-level module is a module which depends on other modules. In our example, CustomerBusinessLogic depends on DataAccess class, so CustomerBusinessLogic is high-level module and DataAccess is low-level module. So, as per first rule of DIP, CustomerBusinessLogic should not depends on concrete DataAccess class, instead both classes depends on abstraction.
+
+The second rule in DIP is "Abstractions should not depend on details. Details should depend on abstractions".
+
+What is Abstraction here?
+In English, abstraction means something which is non-concrete. In programming terms, the above CustomerBusinessLogic and DataAccess are concrete classes, meaning we can create objects of it. So, abstraction in programming is to create an interface or abstract class which is non-concrete. This means we cannot create an object of interface or abstract class. As per DIP, CustomerBusinessLogic (high-level module) should not depend on concrete DataAccess (low-level module) class. Both classes depend on abstractions, meaning both classes should depend on interface or abstract class.
+
+Now, what should be in interface (or in abstract class)? As you can see, CustomerBusinessLogic uses GetCustomerName() method of DataAccess class. (In real life, there will be many customer related methods in DataAccess class). So, let's declare GetCustomerName(int id) method in the interface as shown below.
+
+public interface ICustomerDataAccess
+{
+    string GetCustomerName(int id);
+}
+
+Now, further illustration of ICustomerDataAccess in CustomerDataAccess class can be refer in uploaded example.
+
