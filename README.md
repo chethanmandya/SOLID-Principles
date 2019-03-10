@@ -1,20 +1,8 @@
 # SOLID-Principle
 
-Let's first understand the motivation behind the usage of SOLID Principles
 
-In any enterprise software application development when we design and develop software systems, we need to account the below factors during the development cycle. 
 
-Maintainability : Maintainable systems are very important to the organisations.
-
-Testability : Test driven development (TDD) is required when we design and develop large scale systems
-
-Flexibility and Extensibility : Flexibility and extensibility is a very much desirable factor of enterprise applications.Hence we should design the application to make it flexible so that it can be adapt to work in different ways and extensible so that we can add new features easily. 
-
-Parallel Development : It is one of the key features in the application development as it is not practical to have the entire development team working simultaneously on the same feature or component. 
-
-Loose Coupling : We can address many of the requirements listed above by ensuring that our design results in an application that loosely couples many parts that makes up the application.
-
-SOLID Principles and Design Patterns plays a key role in achieving all of the above points.
+SOLID Principles and Design Patterns plays a key role in achieving all of the below points.
 
 SOLID Introduction 
 1. SOLID principles are the design principles that enable us to manage most of the software design problems
