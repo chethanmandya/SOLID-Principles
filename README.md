@@ -11,6 +11,7 @@ SOLID Introduction
 4. The SOLID acronym was first introduced by Michael Feathers
 
 SOLID Acronym 
+
 S : Single Responsibility Principle (SRP) 
 O : Open closed Principle (OSP) 
 L :  Liskov substitution Principle (LSP) 
