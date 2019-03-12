@@ -93,7 +93,7 @@ In that case, we end up with the following disadvantages
  
 Hope the above counter facts helps in understanding on why we need to follow the open closed principle.
 
-Please refer coding part to undestand implementation part. 
+Please follow the uploaded repo code which addresses this implementation. 
 
 
 ## Liskov Substitution Principle
