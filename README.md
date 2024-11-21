@@ -138,63 +138,241 @@ Hence, Please follow the uploaded repo code which addresses this issue.
 ###  Dependency Inversion Principle
 
 ### Definition :
-High-level modules should not depend on low-level modules. Both should depend on abstractions.
-AND
-Abstractions should not depend on details. Details should depend on abstractions.
+Dependency Inversion Control, more formally referred to as the **Dependency Inversion Principle (DIP)**, is one of the five SOLID principles of object-oriented programming. It aims to reduce the coupling between high-level and low-level modules in a system by adhering to the following guidelines:
 
-To simplify this we can state that while designing the interaction between a high-level module and a low-level one, the interaction should be thought of as an abstract interaction between them.  
+1. **High-level modules should not depend on low-level modules. Both should depend on abstractions.**
+   - High-level modules typically encapsulate the core business logic or policies of an application.
+   - Low-level modules usually deal with detailed implementation, such as database access, file handling, or communication with external services.
+   - By introducing abstractions (e.g., interfaces or abstract classes), high-level modules are not tightly coupled to specific low-level implementations, making the system more flexible and easier to maintain.
 
+2. **Abstractions should not depend on details. Details should depend on abstractions.**
+   - Instead of high-level code being aware of specific implementation details, the details are designed to work according to a predefined abstraction.
 
-To understand DIP, let's take an example as below.
+### Practical Example
+Consider a system where a **PaymentService** needs to process payments. Without dependency inversion:
 
-    public class CustomerBusinessLogic
-       {
-          public CustomerBusinessLogic()
-          {
-          }
+```kotlin
+class PaymentService {
+    private val creditCardProcessor = CreditCardProcessor()
+    
+    fun processPayment() {
+        creditCardProcessor.process()
+    }
+}
 
-          public string GetCustomerName(int id)
-          {
-              DataAccess dataAccess = DataAccessFactory.GetDataAccessObj();
-              return dataAccess.GetCustomerName(id);
-          }
-       }
+class CreditCardProcessor {
+    fun process() {
+        println("Processing credit card payment.")
+    }
+}
+```
 
-       public class DataAccessFactory
-       {
-          public static DataAccess GetDataAccessObj() 
-          {
-              return new DataAccess();
-          }
-       }
+Here, `PaymentService` depends directly on `CreditCardProcessor`. If you need to replace `CreditCardProcessor` with another payment method, you'll need to modify the `PaymentService` class, which violates the principle.
 
-       public class DataAccess
-       {
-          public DataAccess()
-          {
-          }
+With dependency inversion:
 
-          public string GetCustomerName(int id) {
-              return "Dummy Customer Name"; // get it from DB in real app
-          }
-       }
+```kotlin
+// Abstraction
+interface PaymentProcessor {
+    fun process()
+}
 
+// High-level module
+class PaymentService(private val paymentProcessor: PaymentProcessor) {
+    fun processPayment() {
+        paymentProcessor.process()
+    }
+}
 
-In the above example, CustomerBusinessLogic class uses concrete DataAccess class and it is tightly coupled DataAccess class, nothing but it has direct dependency on DataAccess class. 
+// Low-level modules
+class CreditCardProcessor : PaymentProcessor {
+    override fun process() {
+        println("Processing credit card payment.")
+    }
+}
 
-As per DIP definition, a high-level module should not depend on low-level modules. Both should depend on abstraction. So, first, decide which is the high-level module (class) and low-level module. High-level module is a module which depends on other modules. In our example, CustomerBusinessLogic depends on DataAccess class, so CustomerBusinessLogic is high-level module and DataAccess is low-level module. So, as per first rule of DIP, CustomerBusinessLogic should not depends on concrete DataAccess class, instead both classes depends on abstraction.
+class PayPalProcessor : PaymentProcessor {
+    override fun process() {
+        println("Processing PayPal payment.")
+    }
+}
 
-The second rule in DIP is "Abstractions should not depend on details. Details should depend on abstractions".
+fun main() {
+    // Choose the implementation of PaymentProcessor
+    val paymentProcessor: PaymentProcessor = CreditCardProcessor() // or PayPalProcessor()
 
-What is Abstraction here?
-In English, abstraction means something which is non-concrete. In programming terms, the above CustomerBusinessLogic and DataAccess are concrete classes, meaning we can create objects of it. So, abstraction in programming is to create an interface or abstract class which is non-concrete. This means we cannot create an object of interface or abstract class. As per DIP, CustomerBusinessLogic (high-level module) should not depend on concrete DataAccess (low-level module) class. Both classes depend on abstractions, meaning both classes should depend on interface or abstract class.
+    // Inject the dependency into PaymentService
+    val paymentService = PaymentService(paymentProcessor)
 
-Now, what should be in interface (or in abstract class)? As you can see, CustomerBusinessLogic uses GetCustomerName() method of DataAccess class. (In real life, there will be many customer related methods in DataAccess class). So, let's declare GetCustomerName(int id) method in the interface as shown below.
+    // Use the service to process a payment
+    paymentService.processPayment()
+}
+```
 
-      public interface ICustomerDataAccess
-      {
-         string GetCustomerName(int id);
-      }
+Now, the `PaymentService` depends on the abstraction `PaymentProcessor`, and you can easily swap `CreditCardProcessor` with `PayPalProcessor` or any other implementation without modifying the high-level code.
 
-Now, further illustration of ICustomerDataAccess in CustomerDataAccess class can be refer from uploaded example.
+### Benefits of Dependency Inversion
+- **Flexibility**: Makes it easier to substitute one implementation for another.
+- **Testability**: High-level modules can be tested independently by mocking low-level dependencies.
+- **Maintainability**: Changes to the implementation details of low-level modules do not affect high-level modules.
+- **Scalability**: Encourages a clean architecture that supports the addition of new features.
+
+**Advanced: Using a Dependency Injection Framework**
+To dynamically decide which implementation of PaymentProcessor (PayPalProcessor or CreditCardProcessor) to use in a specific scenario, you can achieve this by using qualifiers in Hilt. Qualifiers allow you to differentiate between different implementations of the same abstraction.
+
+To dynamically decide which implementation of `PaymentProcessor` (`PayPalProcessor` or `CreditCardProcessor`) to use in a specific scenario, you can achieve this by using **qualifiers** in Hilt. Qualifiers allow you to differentiate between different implementations of the same abstraction.
+
+Here’s how you can set it up:
+
+---
+
+### Step-by-Step Solution
+
+#### 1. **Define Qualifiers**
+Create custom annotations to differentiate between implementations.
+
+```kotlin
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class CreditCard
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PayPal
+```
+
+---
+
+#### 2. **Provide Different Implementations**
+Use these qualifiers to bind different implementations in your Hilt module.
+
+```kotlin
+@InstallIn(SingletonComponent::class)
+@Module
+object PaymentModule {
+
+    @CreditCard
+    @Provides
+    fun provideCreditCardProcessor(): PaymentProcessor {
+        return CreditCardProcessor()
+    }
+
+    @PayPal
+    @Provides
+    fun providePayPalProcessor(): PaymentProcessor {
+        return PayPalProcessor()
+    }
+}
+```
+
+---
+
+#### 3. **Inject the Required Implementation**
+You can now inject specific implementations using the qualifiers.
+
+- **Injecting into the Repository**
+
+```kotlin
+class PaymentRepository @Inject constructor(
+    @CreditCard private val creditCardProcessor: PaymentProcessor,
+    @PayPal private val payPalProcessor: PaymentProcessor
+) {
+    fun executePayment(usingPayPal: Boolean): String {
+        return if (usingPayPal) {
+            payPalProcessor.processPayment()
+        } else {
+            creditCardProcessor.processPayment()
+        }
+    }
+}
+```
+
+---
+
+#### 4. **Modify the ViewModel to Handle Scenarios**
+Pass the required scenario to the repository from the ViewModel.
+
+```kotlin
+@HiltViewModel
+class PaymentViewModel @Inject constructor(
+    private val paymentRepository: PaymentRepository
+) : ViewModel() {
+
+    private val _paymentStatus = MutableLiveData<String>()
+    val paymentStatus: LiveData<String> = _paymentStatus
+
+    fun processPayment(usingPayPal: Boolean) {
+        _paymentStatus.value = paymentRepository.executePayment(usingPayPal)
+    }
+}
+```
+
+---
+
+#### 5. **Pass the Scenario from the UI**
+In the UI, you decide which processor to use based on the user's action or a specific condition.
+
+```kotlin
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    private val viewModel: PaymentViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        viewModel.paymentStatus.observe(this) { status ->
+            Toast.makeText(this, status, Toast.LENGTH_SHORT).show()
+        }
+
+        // Example: Trigger payment using PayPal
+        findViewById<Button>(R.id.paypalButton).setOnClickListener {
+            viewModel.processPayment(usingPayPal = true)
+        }
+
+        // Example: Trigger payment using Credit Card
+        findViewById<Button>(R.id.creditCardButton).setOnClickListener {
+            viewModel.processPayment(usingPayPal = false)
+        }
+    }
+}
+```
+
+---
+
+### Alternative: Passing Dependencies at Runtime
+If you want to decide entirely at runtime and avoid injecting multiple processors into the repository, you can inject a factory or delegate the decision to a higher-level component like a factory method.
+
+#### Using a Factory Pattern with Hilt
+1. **Create a Factory:**
+
+```kotlin
+class PaymentProcessorFactory @Inject constructor(
+    @CreditCard private val creditCardProcessor: PaymentProcessor,
+    @PayPal private val payPalProcessor: PaymentProcessor
+) {
+    fun getProcessor(usingPayPal: Boolean): PaymentProcessor {
+        return if (usingPayPal) payPalProcessor else creditCardProcessor
+    }
+}
+```
+
+2. **Use the Factory in the Repository:**
+
+```kotlin
+class PaymentRepository @Inject constructor(
+    private val processorFactory: PaymentProcessorFactory
+) {
+    fun executePayment(usingPayPal: Boolean): String {
+        return processorFactory.getProcessor(usingPayPal).processPayment()
+    }
+}
+```
+
+---
+
+### Summary
+
+You can handle dynamic scenarios with **qualifiers** and inject both implementations into the `Repository`, or use a **factory pattern** to determine the implementation at runtime. Both approaches align with the **Dependency Inversion Principle**, maintaining flexibility and testability.
 
